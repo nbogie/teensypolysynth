@@ -373,30 +373,10 @@ void setup() {
   last4premix.gain(2, .25);
   last4premix.gain(3, .25);
 
-  //Voice 1
-  voice1a.begin(.3,440,WAVEFORM_SQUARE);
-  voice1b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 2
-  voice2a.begin(.3,440,WAVEFORM_SQUARE);
-  voice2b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 3
-  voice3a.begin(.3,440,WAVEFORM_SQUARE);
-  voice3b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 4
-  voice4a.begin(.3,440,WAVEFORM_SQUARE);
-  voice4b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 5
-  voice5a.begin(.3,440,WAVEFORM_SQUARE);
-  voice5b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 6
-  voice6a.begin(.3,440,WAVEFORM_SQUARE);
-  voice6b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 7
-  voice7a.begin(.3,440,WAVEFORM_SQUARE);
-  voice7b.begin(.3,440,WAVEFORM_SAWTOOTH);
-  //Voice 8
-  voice8a.begin(.3,440,WAVEFORM_SQUARE);
-  voice8b.begin(.3,440,WAVEFORM_SAWTOOTH);
+  for (int vn = 1; vn < 9; vn++) {
+    getVoiceA(vn).begin(.3,440,WAVEFORM_SQUARE);
+    getVoiceB(vn).begin(.3,440,WAVEFORM_SAWTOOTH);
+  }
 
   delayFilter.frequency(3000);
   delayFilter.resonance(1);
@@ -482,6 +462,153 @@ int readMux(int channel){
   return val;
 }
 
+AudioFilterStateVariable getVoiceFilter(int n){
+    switch(n) {
+    case 1:
+    return voice1filter;
+    case 2:
+    return voice2filter;
+    case 3:
+    return voice3filter;
+    case 4:
+    return voice4filter;
+    case 5:
+    return voice5filter;
+    case 6:
+    return voice6filter;
+    case 7:
+    return voice7filter;
+    case 8:
+    return voice8filter;  
+  }
+}
+
+AudioSynthWaveformDc getVoiceFilterEnv(int n){
+  switch(n) {
+    case 1:
+    return voice1filterenv;
+    case 2:
+    return voice2filterenv;
+    case 3:
+    return voice3filterenv;
+    case 4:
+    return voice4filterenv;
+    case 5:
+    return voice5filterenv;
+    case 6:
+    return voice6filterenv;
+    case 7:
+    return voice7filterenv;
+    case 8:
+    return voice8filterenv;  
+  }  
+}
+AudioSynthWaveformDc getVoiceEnv(int n){
+  switch(n) {
+    case 1:
+    return voice1env;
+    case 2:
+    return voice2env;
+    case 3:
+    return voice3env;
+    case 4:
+    return voice4env;
+    case 5:
+    return voice5env;
+    case 6:
+    return voice6env;
+    case 7:
+    return voice7env;
+    case 8:
+    return voice8env;  
+  }  
+}
+AudioSynthNoiseWhite getVoiceNoise(int n) {
+  switch(n) {
+    case 1:
+    return voice1n;
+    case 2:
+    return voice2n;
+    case 3:
+    return voice3n;
+    case 4:
+    return voice4n;
+    case 5:
+    return voice5n;
+    case 6:
+    return voice6n;
+    case 7:
+    return voice7n;
+    case 8:
+    return voice8n;  
+  }        
+}
+AudioMixer4 getVoiceFilterModMixer(int n) {
+  switch(n) {
+    case 1:
+    return voice1filtermodmixer;
+    case 2:
+    return voice2filtermodmixer;
+    case 3:
+    return voice3filtermodmixer;
+    case 4:
+    return voice4filtermodmixer;
+    case 5:
+    return voice5filtermodmixer;
+    case 6:
+    return voice6filtermodmixer;
+    case 7:
+    return voice7filtermodmixer;
+    case 8:
+    return voice8filtermodmixer;  
+  }        
+}
+
+AudioSynthWaveform getVoiceA(int n){
+  switch(n) {
+    case 1:
+    return voice1a;
+    case 2:
+    return voice2a;
+    case 3:
+    return voice3a;
+    case 4:
+    return voice4a;
+    case 5:
+    return voice5a;
+    case 6:
+    return voice6a;
+    case 7:
+    return voice7a;
+    case 8:
+    return voice8a;  
+  }
+}
+
+
+
+//TODO: put these waveform units into a couple of arrays for lookup
+AudioSynthWaveform getVoiceB(int n){
+  switch(n) {
+    case 1:
+    return voice1b;
+    case 2:
+    return voice2b;
+    case 3:
+    return voice3b;
+    case 4:
+    return voice4b;
+    case 5:
+    return voice5b;
+    case 6:
+    return voice6b;
+    case 7:
+    return voice7b;
+    case 8:
+    return voice8b;  
+  }
+}
+
 void loop() {
 
   //Volume
@@ -501,204 +628,31 @@ void loop() {
   }
   //notes
   for(int i=0; i<8; i++){
-    if(i == 0){
-      voice1a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice1b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 1){
-      voice2a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice2b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 2){
-      voice3a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice3b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 3){
-      voice4a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice4b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 4){
-      voice5a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice5b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 5){
-      voice6a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice6b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 6){
-      voice7a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice7b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
-    if(i == 7){
-      voice8a.frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
-      voice8b.frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
-    }
+    getVoiceA(i+1).frequency((noteFreq[keyIndex][i]/4)*vcoOneOct);
+    getVoiceB(i+1).frequency(((noteFreq[keyIndex][i]/4*vcoTwoOct) * deTune) * deTuneLfo);
     
     btnState[i] = digitalRead(notePins[i]);
     if (noteBounce[i].update()){
       Serial.println(noteFreq[keyIndex][i]);
-      if(i == 0){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice1env.amplitude(1,attackTime);
-          voice1filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice1env.amplitude(0,releaseTime);
-          voice1filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 1){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice2env.amplitude(1,attackTime);
-          voice2filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice2env.amplitude(0,releaseTime);
-          voice2filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 2){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice3env.amplitude(1,attackTime);
-          voice3filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice3env.amplitude(0,releaseTime);
-          voice3filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 3){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice4env.amplitude(1,attackTime);
-          voice4filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice4env.amplitude(0,releaseTime);
-          voice4filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 4){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice5env.amplitude(1,attackTime);
-          voice5filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice5env.amplitude(0,releaseTime);
-          voice5filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 5){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice6env.amplitude(1,attackTime);
-          voice6filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice6env.amplitude(0,releaseTime);
-          voice6filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 6){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice7env.amplitude(1,attackTime);
-          voice7filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice7env.amplitude(0,releaseTime);
-          voice7filterenv.amplitude(-1, releaseTimeFilter);
-        }
-      }
-      if(i == 7){
-        if (btnState[i] == LOW && prevBtnState[i] == HIGH){
-          voice8env.amplitude(1,attackTime);
-          voice8filterenv.amplitude(1,attackTimeFilter);
-          noteTrigFlag[i] = true;
-          attackWait[i] = millis();
-        }else{
-          noteTrigFlag[i] = false;
-          voice8env.amplitude(0,releaseTime);
-          voice8filterenv.amplitude(-1, releaseTimeFilter);
-        }
+      //example when i = 0
+      if (btnState[i] == LOW && prevBtnState[i] == HIGH){
+        getVoiceEnv(i+1).amplitude(1,attackTime);
+        getVoiceFilterEnv(i+1).amplitude(1,attackTimeFilter);
+        noteTrigFlag[i] = true;
+        attackWait[i] = millis();
+      }else{
+        noteTrigFlag[i] = false;
+        getVoiceEnv(i+1).amplitude(0,releaseTime);
+        getVoiceFilterEnv(i+1).amplitude(-1, releaseTimeFilter);
       }
     }
     if(btnState[i] == LOW){
-      if(i == 0){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice1env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice1filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
+      if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
+        getVoiceEnv(i+1).amplitude(sustainLevel,decayTime);
       }
-      if(i == 1){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice2env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice2filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
+      if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
+        getVoiceFilterEnv(i+1).amplitude(sustainLevelFilter,decayTimeFilter);
       }
-      if(i == 2){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice3env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice3filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      }   
-      if(i == 3){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice4env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice4filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      }  
-      if(i == 4){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice5env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice5filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      }  
-      if(i == 5){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice6env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice6filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      } 
-      if(i == 6){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice7env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice7filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      } 
-      if(i == 7){
-        if(millis() - attackWait[i] > attackTime && noteTrigFlag[i]){
-          voice8env.amplitude(sustainLevel,decayTime);
-        }
-        if(millis() - attackWait[i] > attackTimeFilter && noteTrigFlag[i]){
-          voice8filterenv.amplitude(sustainLevelFilter,decayTimeFilter);
-        }
-      } 
     }
     prevBtnState[i] = btnState[i];
   }
@@ -727,14 +681,9 @@ void loop() {
         //shape
         waveShapeOneIndex = analogValues[i]/255;
         if(waveShapeOneIndex < 4){
-          voice1a.begin(waveShapes[waveShapeOneIndex]);
-          voice2a.begin(waveShapes[waveShapeOneIndex]);
-          voice3a.begin(waveShapes[waveShapeOneIndex]);
-          voice4a.begin(waveShapes[waveShapeOneIndex]);
-          voice5a.begin(waveShapes[waveShapeOneIndex]);
-          voice6a.begin(waveShapes[waveShapeOneIndex]);
-          voice7a.begin(waveShapes[waveShapeOneIndex]);
-          voice8a.begin(waveShapes[waveShapeOneIndex]);
+          for(int vn=1; vn<9; vn++){
+            getVoiceA(vn).begin(waveShapes[waveShapeOneIndex]);            
+          }
         }
       }
       if(i == 4){
@@ -775,15 +724,10 @@ void loop() {
             voiceBPulse = true;
           }else{
             voiceBPulse = false;
-          }          
-          voice1b.begin(waveShapes[waveShapeTwoIndex]);
-          voice2b.begin(waveShapes[waveShapeTwoIndex]);
-          voice3b.begin(waveShapes[waveShapeTwoIndex]);
-          voice4b.begin(waveShapes[waveShapeTwoIndex]);
-          voice5b.begin(waveShapes[waveShapeTwoIndex]);
-          voice6b.begin(waveShapes[waveShapeTwoIndex]);
-          voice7b.begin(waveShapes[waveShapeTwoIndex]);
-          voice8b.begin(waveShapes[waveShapeTwoIndex]);
+          }      
+          for(int vn=1; vn<9; vn++){
+            getVoiceB(vn).begin(waveShapes[waveShapeTwoIndex]);
+          }    
         }
       }
       if(i == 10){
@@ -806,59 +750,34 @@ void loop() {
       }
       //noise
       if(i == 1){
-        voice1n.amplitude(analogValues[i]/3096);
-        voice2n.amplitude(analogValues[i]/3096);
-        voice3n.amplitude(analogValues[i]/3096);
-        voice4n.amplitude(analogValues[i]/3096);
-        voice5n.amplitude(analogValues[i]/3096);
-        voice6n.amplitude(analogValues[i]/3096);
-        voice7n.amplitude(analogValues[i]/3096);
-        voice8n.amplitude(analogValues[i]/3096);
+        for(int vn=1; vn<9; vn++){
+          getVoiceNoise(vn).amplitude(analogValues[i]/3096);
+        }
       }
       //Filter
       if(i == 9){
         //frequency
-        voice1filter.frequency(analogValues[i]*10);
-        voice2filter.frequency(analogValues[i]*10);
-        voice3filter.frequency(analogValues[i]*10);
-        voice4filter.frequency(analogValues[i]*10);
-        voice5filter.frequency(analogValues[i]*10);
-        voice6filter.frequency(analogValues[i]*10);
-        voice7filter.frequency(analogValues[i]*10);
-        voice8filter.frequency(analogValues[i]*10);
+        for(int vn=1; vn<9; vn++){
+          getVoiceFilter(vn).frequency(analogValues[i]*10);
+        }        
       }
       if(i == 5){
         //resonance
-        voice1filter.resonance((analogValues[i]/204)+.9);
-        voice2filter.resonance((analogValues[i]/204)+.9);
-        voice3filter.resonance((analogValues[i]/204)+.9);
-        voice4filter.resonance((analogValues[i]/204)+.9);
-        voice5filter.resonance((analogValues[i]/204)+.9);
-        voice6filter.resonance((analogValues[i]/204)+.9);
-        voice7filter.resonance((analogValues[i]/204)+.9);
-        voice8filter.resonance((analogValues[i]/204)+.9);
+        for(int vn=1; vn<9; vn++){
+          getVoiceFilter(vn).resonance((analogValues[i]/204)+.9);
+        }        
       }
       if(i == 13){
         //lfo Mod
-        voice1filtermodmixer.gain(1, analogValues[i]/1023);
-        voice2filtermodmixer.gain(1, analogValues[i]/1023);
-        voice3filtermodmixer.gain(1, analogValues[i]/1023);
-        voice4filtermodmixer.gain(1, analogValues[i]/1023);
-        voice5filtermodmixer.gain(1, analogValues[i]/1023);
-        voice6filtermodmixer.gain(1, analogValues[i]/1023);
-        voice7filtermodmixer.gain(1, analogValues[i]/1023);
-        voice8filtermodmixer.gain(1, analogValues[i]/1023);
+        for (int vn=1; vn<9; vn++){
+          getVoiceFilterModMixer(vn).gain(1, analogValues[i]/1023);
+        }
       }
       if(i == 3){
         //env Mod
-        voice1filtermodmixer.gain(0, analogValues[i]/1023);
-        voice2filtermodmixer.gain(0, analogValues[i]/1023);
-        voice3filtermodmixer.gain(0, analogValues[i]/1023);
-        voice4filtermodmixer.gain(0, analogValues[i]/1023);
-        voice5filtermodmixer.gain(0, analogValues[i]/1023);
-        voice6filtermodmixer.gain(0, analogValues[i]/1023);
-        voice7filtermodmixer.gain(0, analogValues[i]/1023);
-        voice8filtermodmixer.gain(0, analogValues[i]/1023);
+        for (int vn=1; vn<9; vn++){
+          getVoiceFilterModMixer(vn).gain(0, analogValues[i]/1023);
+        }
       }
       //delay
       if(i == 11){
@@ -958,24 +877,14 @@ void loop() {
   analogWrite(blue, blueLevel*tempPeak);
   analogWrite(green, greenLevel*tempPeak);
   analogWrite(red, redLevel*tempPeak);
-  voice1a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice2a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice3a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice4a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice5a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice6a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice7a.pulseWidth((tempPeak/2) + tempPulseWidth);
-  voice8a.pulseWidth((tempPeak/2) + tempPulseWidth);
+  for (int vn=1; vn < 9; vn++){
+    getVoiceA(vn).pulseWidth((tempPeak/2) + tempPulseWidth);    
+  }
 
   if(voiceBPulse){
-    voice1b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice2b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice3b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice4b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice5b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice6b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice7b.pulseWidth((tempPeak/2) + tempPulseWidth);
-    voice8b.pulseWidth((tempPeak/2) + tempPulseWidth);
+    for (int vn=1; vn < 9; vn++){
+      getVoiceB(vn).pulseWidth((tempPeak/2) + tempPulseWidth);
+    }
   }else{
     deTuneLfo = ((tempPeak) * tempDetuneMod + 1);
     //Serial.println(deTuneLfo);
